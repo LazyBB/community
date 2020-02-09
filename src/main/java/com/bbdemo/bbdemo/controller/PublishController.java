@@ -1,6 +1,6 @@
 package com.bbdemo.bbdemo.controller;
 
-import com.bbdemo.bbdemo.dto.Question;
+import com.bbdemo.bbdemo.model.Question;
 import com.bbdemo.bbdemo.mapper.QuestionMapper;
 import com.bbdemo.bbdemo.mapper.UserMapper;
 import com.bbdemo.bbdemo.model.User;
@@ -20,37 +20,39 @@ public class PublishController {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+
     @GetMapping("/publish")
-    public String publish(){
+    public String publish() {
         return "publish";
     }
+
     @PostMapping("/publish")
     public String doPublish(
-            @RequestParam(value = "title",required = false) String title,
-            @RequestParam(value = "description",required = false) String description,
-            @RequestParam(value = "tag",required = false) String tag,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "tag", required = false) String tag,
             HttpServletRequest request,
-            Model model){
-        model.addAttribute("title",title);
-        model.addAttribute("description",description);
-        model.addAttribute("tag",tag);
+            Model model) {
+        model.addAttribute("title", title);
+        model.addAttribute("description", description);
+        model.addAttribute("tag", tag);
 
-        if (title==null || title==""){
-            model.addAttribute("error","内容不能为空");
+        if (title == null || title == "") {
+            model.addAttribute("error", "内容不能为空");
             return "publish";
         }
-        if (description==null || description==""){
-            model.addAttribute("error","内容不能为空");
+        if (description == null || description == "") {
+            model.addAttribute("error", "内容不能为空");
             return "publish";
         }
-        if (tag==null || tag==""){
-            model.addAttribute("error","标签不能为空");
+        if (tag == null || tag == "") {
+            model.addAttribute("error", "标签不能为空");
             return "publish";
         }
 
         User user = null;
         Cookie[] cookies = request.getCookies();
-        if (cookies!=null) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
@@ -63,8 +65,8 @@ public class PublishController {
             }
         }
 
-        if (user==null){
-            model.addAttribute("error","用户未登录");
+        if (user == null) {
+            model.addAttribute("error", "用户未登录");
             return "publish";
         }
         Question question = new Question();
