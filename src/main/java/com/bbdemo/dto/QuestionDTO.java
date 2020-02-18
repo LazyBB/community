@@ -1,6 +1,6 @@
-package com.bbdemo.bbdemo.dto;
+package com.bbdemo.dto;
 
-import com.bbdemo.bbdemo.model.User;
+import com.bbdemo.model.User;
 import lombok.Data;
 
 @Data
@@ -9,8 +9,8 @@ public class QuestionDTO {
     private String title;
     private String description;
     private String tag;
-    private long gmt_create;
-    private long gmt_modified;
+    private long gmtCreate;
+    private long gmtModified;
     private Integer creator;
     private Integer viewCout;
     private Integer likeCout;

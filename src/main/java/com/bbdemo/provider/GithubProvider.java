@@ -1,8 +1,8 @@
-package com.bbdemo.bbdemo.provider;
+package com.bbdemo.provider;
 
 import com.alibaba.fastjson.JSON;
-import com.bbdemo.bbdemo.dto.AccessToken;
-import com.bbdemo.bbdemo.dto.GithubUser;
+import com.bbdemo.dto.AccessToken;
+import com.bbdemo.dto.GithubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 

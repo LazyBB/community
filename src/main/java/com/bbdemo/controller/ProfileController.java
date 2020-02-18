@@ -1,8 +1,8 @@
-package com.bbdemo.bbdemo.controller;
+package com.bbdemo.controller;
 
-import com.bbdemo.bbdemo.dto.PaginationDTO;
-import com.bbdemo.bbdemo.model.User;
-import com.bbdemo.bbdemo.service.QuestionService;
+import com.bbdemo.dto.PaginationDTO;
+import com.bbdemo.model.User;
+import com.bbdemo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

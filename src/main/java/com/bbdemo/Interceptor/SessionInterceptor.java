@@ -1,7 +1,8 @@
-package com.bbdemo.bbdemo.Interceptor;
+package com.bbdemo.Interceptor;
 
-import com.bbdemo.bbdemo.mapper.UserMapper;
-import com.bbdemo.bbdemo.model.User;
+import com.bbdemo.mapper.UserMapper;
+import com.bbdemo.model.User;
+import com.bbdemo.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
@@ -23,9 +25,12 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
+                    UserExample example = new UserExample();
+                    example.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> user = userMapper.selectByExample(example);
+                    if (user.size() != 0) {
+                        request.getSession().setAttribute("user", user.get(0));
                     }
                     break;
                 }

@@ -1,4 +1,4 @@
-package com.bbdemo.bbdemo.dto;
+package com.bbdemo.dto;
 
 import lombok.Data;
 

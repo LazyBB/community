@@ -1,10 +1,11 @@
-package com.bbdemo.bbdemo.controller;
+package com.bbdemo.controller;
 
-import com.bbdemo.bbdemo.dto.AccessToken;
-import com.bbdemo.bbdemo.dto.GithubUser;
-import com.bbdemo.bbdemo.mapper.UserMapper;
-import com.bbdemo.bbdemo.model.User;
-import com.bbdemo.bbdemo.provider.GithubProvider;
+import com.bbdemo.dto.AccessToken;
+import com.bbdemo.dto.GithubUser;
+import com.bbdemo.mapper.UserMapper;
+import com.bbdemo.model.User;
+import com.bbdemo.provider.GithubProvider;
+import com.bbdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -28,6 +30,9 @@ public class AuthorizeController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/callback")
 
@@ -54,12 +59,22 @@ public class AuthorizeController {
             user.setAvatarUrl(githubUser.getAvatar_url());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            userMapper.insert(user);
+            userService.insertOrUpdate(user);
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
             // 失败
             return "redirect:/";
         }
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response,
+                         HttpServletRequest request){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }
