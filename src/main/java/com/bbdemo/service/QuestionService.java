@@ -2,6 +2,8 @@ package com.bbdemo.service;
 
 import com.bbdemo.dto.PaginationDTO;
 import com.bbdemo.dto.QuestionDTO;
+import com.bbdemo.exception.CustomizeErrorCode;
+import com.bbdemo.exception.CustomizeException;
 import com.bbdemo.mapper.QuestionExtMapper;
 import com.bbdemo.mapper.QuestionMapper;
 import com.bbdemo.mapper.UserMapper;
@@ -56,7 +58,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO List(Integer id, Integer page, Integer size) {
+    public PaginationDTO List(long id, Integer page, Integer size) {
         QuestionExample example = new QuestionExample();
         example.createCriteria()
                 .andIdEqualTo(id);
@@ -92,8 +94,11 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO findById(Integer id) {
+    public QuestionDTO findById(long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setUser(user);
@@ -113,11 +118,14 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(dbquestion, example);
+            int update = questionMapper.updateByExampleSelective(dbquestion, example);
+            if(update!=1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 
-    public void incView(Integer id) {
+    public void incView(long id) {
         Question question = new Question();
         question.setId(id);
         question.setViewCout(1);

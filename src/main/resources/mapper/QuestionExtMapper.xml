@@ -25,4 +25,11 @@
     where ID= #{id}
   </update>
 
+  <update id="incCommentCount" parameterType="com.bbdemo.model.Question">
+    update QUESTION
+    set
+      COMMENT_COUT = COMMENT_COUT + #{commentCout,jdbcType=INTEGER}
+    where ID= #{id}
+  </update>
+
 </mapper>
