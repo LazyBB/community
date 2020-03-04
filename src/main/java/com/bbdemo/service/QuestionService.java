@@ -108,7 +108,7 @@ public class QuestionService {
 
     public void CreateOrUpdate(Question question) {
         if (question.getId() == null) {
-            questionMapper.insert(question);
+            questionMapper.insertSelective(question);
         } else {
             Question dbquestion = new Question();
             dbquestion.setGmtModified(System.currentTimeMillis());

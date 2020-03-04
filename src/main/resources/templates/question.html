@@ -9,13 +9,14 @@
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
+    <script src="/js/moment.js" type="application/javascript"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
 <div class="container-fluid main profile">
     <div class="row">
         <div class="col-lg-9 clo-md-12 col-sm-12 col-xs-12">
-            <h3><span th:text="${question.getTitle()}"></span></h3>
+            <h3 style="margin-top: 30px"><span th:text="${question.getTitle()}"></span></h3>
             <hr>
             <span class="question-dec">
                 作者：<span th:text="${question.user.getName()}"></span> |
@@ -28,6 +29,39 @@
             <a th:href="@{'/publish/'+${question.id}}" class="community-menu" th:if="${session.user!=null && session.user.getId()==question.getCreator()}">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
             </a>
+            <hr class="line-color">
+            <h3>
+                <span th:text="${question.getCommentCout()}"></span>个评论
+            </h3>
+            <hr>
+            <div>
+                <div class="media" th:each="comment:${comments}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded"
+                                 th:src="${comment.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <span th:text="${comment.user.getName()}">
+                            <a href="#"></a>
+                        </span>
+                        <div th:text="${comment.getComment()}"></div>
+                        <div class="menu">
+                            <span class="glyphicon glyphicon-heart-empty menu-icon"></span>
+                            <span class="glyphicon glyphicon-comment menu-icon"
+                                  th:data-id="${comment.getId()}" onclick="collapseComment(this)" th:text="${comment.getCommentCount()}"></span>
+                            <span class="pull-right" th:text="${#dates.format(comment.getGmtCreate(),'yyyy-MM-dd')}"></span>
+                        </div>
+                        <div class="collapse sub-comments" th:id="${'comment-'+comment.getId()}">
+                            <div>
+                                <input type="text" class="form-control" placeholder="评论" th:id="${'reply-'+comment.getId()}">
+                                <button type="button" class="btn btn-success sub-comments-btn pull-right" onclick="comment(this)" th:data-id="${comment.getId()}">评论</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <hr>
             <div id="comment-body">
                 <div class="media">
@@ -49,7 +83,7 @@
             </div>
         </div>
         <div class="col-lg-3 clo-md-12 col-sm-12 col-xs-12">
-            <h4>发起人</h4>
+            <h4 style="margin-top: 30px">发起人</h4>
             <div class="media">
                 <div class="media-left">
                     <a href="#">

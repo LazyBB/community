@@ -40,7 +40,7 @@ public class PublishController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "tag", required = false) String tag,
-            @RequestParam(value = "id", required = false) long id,
+//            @RequestParam(value = "id", required = false) long id,
             HttpServletRequest request,
             Model model) {
         model.addAttribute("title", title);
@@ -73,7 +73,7 @@ public class PublishController {
         question.setDescription(description);
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
-        question.setId(id);
+//        question.setId(id);
         questionService.CreateOrUpdate(question);
         return "redirect:/";
     }
