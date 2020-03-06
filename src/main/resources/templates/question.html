@@ -26,6 +26,11 @@
             <hr>
             <div th:text="${question.getDescription()}"></div>
             <hr>
+            <span class="label label-info question-tag" th:each="tag : ${question.getTag().split(',')}">
+                <span class="glyphicon glyphicon-tags"></span>
+                <span class="label label-info" th:text="${tag}"></span>
+            </span>
+            <hr>
             <a th:href="@{'/publish/'+${question.id}}" class="community-menu" th:if="${session.user!=null && session.user.getId()==question.getCreator()}">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
             </a>
@@ -98,7 +103,17 @@
                 </div>
             </div>
             <hr>
+            <div>
+                <h4>假装拥有广告</h4>
+                <img src="/img/makeup.jpg" class="img-thumbnail" style="width:100%">
+            </div>
+            <hr>
             <h4>相关问题</h4>
+            <ul class="question-related">
+                <li th:each="relatedquestion:${relatedQuestions}">
+                    <a th:href="@{'/question/'+${relatedquestion.id}}" th:text="${relatedquestion.getTitle()}"></a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

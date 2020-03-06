@@ -66,6 +66,7 @@ public class PublishController {
             model.addAttribute("error", "用户未登录");
             return "publish";
         }
+        tag=tag.replace('，',',');
         Question question = new Question();
         question.setTitle(title);
         question.setTag(tag);

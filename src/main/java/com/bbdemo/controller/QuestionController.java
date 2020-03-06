@@ -3,6 +3,7 @@ package com.bbdemo.controller;
 import com.bbdemo.dto.CommentUserDTO;
 import com.bbdemo.dto.QuestionDTO;
 import com.bbdemo.enums.CommentTypeEnum;
+import com.bbdemo.model.Question;
 import com.bbdemo.service.CommentService;
 import com.bbdemo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,11 @@ public class QuestionController {
     ) {
         QuestionDTO question = questionService.findById(id);
         List<CommentUserDTO> comments =commentService.listByTargetId(id, CommentTypeEnum.QUESTION.getType());
+        List<QuestionDTO> relatedQuestions = questionService.selectByTags(question);
         questionService.incView(id);
         model.addAttribute("question",question);
         model.addAttribute("comments",comments);
+        model.addAttribute("relatedQuestions",relatedQuestions);
         return "question";
     }
 }

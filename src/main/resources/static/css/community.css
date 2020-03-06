@@ -62,3 +62,11 @@ body {
 .sub-comments-btn{
     margin: 10px 0;
 }
+.question-tag{
+    margin-right: 5px;
+}
+.question-related{
+    font-size: 12px;
+    padding-left: 0;
+    list-style: none;
+}
