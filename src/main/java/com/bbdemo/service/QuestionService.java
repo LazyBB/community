@@ -45,7 +45,9 @@ public class QuestionService {
             page = totalpage;
         }
         Integer offset = size * (page - 1);
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
+        QuestionExample example = new QuestionExample();
+        example.setOrderByClause("gmt_create desc");
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new LinkedList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question : questions) {
@@ -55,7 +57,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         paginationDTO.setpagination(totalpage, page);
         return paginationDTO;
     }
@@ -63,7 +65,7 @@ public class QuestionService {
     public PaginationDTO List(long id, Integer page, Integer size) {
         QuestionExample example = new QuestionExample();
         example.createCriteria()
-                .andIdEqualTo(id);
+                .andCreatorEqualTo(id);
         Integer totalCount = (int) questionMapper.countByExample(example);
         Integer totalpage;
         if (totalCount % size == 0) {
@@ -80,7 +82,8 @@ public class QuestionService {
         Integer offset = size * (page - 1);
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
-                .andIdEqualTo(id);
+                .andCreatorEqualTo(id);
+        questionExample.setOrderByClause("gmt_create desc");
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new LinkedList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -91,7 +94,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         paginationDTO.setpagination(totalpage, page);
         return paginationDTO;
     }

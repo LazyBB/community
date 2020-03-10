@@ -1,8 +1,10 @@
 package com.bbdemo.Interceptor;
 
+import com.bbdemo.dto.NoticeDTO;
 import com.bbdemo.mapper.UserMapper;
 import com.bbdemo.model.User;
 import com.bbdemo.model.UserExample;
+import com.bbdemo.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,6 +20,8 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    NoticeService noticeService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
@@ -31,6 +35,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<User> user = userMapper.selectByExample(example);
                     if (user.size() != 0) {
                         request.getSession().setAttribute("user", user.get(0));
+                        Long unreadCount = noticeService.unreadCount(user.get(0).getId());
+                        request.getSession().setAttribute("unreadCount", unreadCount);
                     }
                     break;
                 }

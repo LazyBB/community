@@ -1,5 +1,6 @@
 package com.bbdemo.controller;
 
+import com.bbdemo.cache.TagCache;
 import com.bbdemo.dto.QuestionDTO;
 import com.bbdemo.model.Question;
 import com.bbdemo.model.User;
@@ -23,15 +24,18 @@ public class PublishController {
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") long id, Model model) {
         QuestionDTO question = questionService.findById(id);
+
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id",question.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -46,6 +50,7 @@ public class PublishController {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
+        model.addAttribute("tags", TagCache.get());
 
         if (title == null || title == "") {
             model.addAttribute("error", "内容不能为空");
