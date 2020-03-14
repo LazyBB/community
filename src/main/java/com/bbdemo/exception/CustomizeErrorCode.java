@@ -7,7 +7,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     SYS_ERROR(1001,"服务器异常，请稍后再试"),
     TYPE_NOT_FOUND(2004,"评论类型未选定或错误"),
     COMMENT_NOT_FOUND(2005,"评论不存在，换个试试"),
-    COMMENT_IS_EMPTY(2006,"评论不能为空");
+    COMMENT_IS_EMPTY(2006,"评论不能为空"),
+    IMAGE_UPLOAD_FALSE(2007,"图片上传失败");
     private String message;
     private Integer code;
     @Override

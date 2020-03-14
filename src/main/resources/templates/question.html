@@ -6,10 +6,14 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
+    <link rel="stylesheet" href="/css/editormd.preview.min.css"/>
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
     <script src="/js/moment.js" type="application/javascript"></script>
+    <script src="/js/editormd.min.js" type="application/javascript"></script>
+    <script src="/js/lib/marked.min.js" type="application/javascript"></script>
+    <script src="/js/lib/prettify.min.js" type="application/javascript"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -24,14 +28,22 @@
                 阅读数：<span th:text="${question.getViewCout()}"></span>
             </span>
             <hr>
-            <div th:text="${question.getDescription()}"></div>
+            <div id="question-view">
+                <textarea style="display: none" th:text="${question.getDescription()}"></textarea>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    editormd.markdownToHTML("question-view", {});
+                });
+            </script>
             <hr>
             <span class="label label-info question-tag" th:each="tag : ${question.getTag().split(',')}">
                 <span class="glyphicon glyphicon-tags"></span>
                 <span class="label label-info" th:text="${tag}"></span>
             </span>
             <hr>
-            <a th:href="@{'/publish/'+${question.id}}" class="community-menu" th:if="${session.user!=null && session.user.getId()==question.getCreator()}">
+            <a th:href="@{'/publish/'+${question.id}}" class="community-menu"
+               th:if="${session.user!=null && session.user.getId()==question.getCreator()}">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
             </a>
             <hr class="line-color">
@@ -55,13 +67,18 @@
                         <div class="menu">
                             <span class="glyphicon glyphicon-heart-empty menu-icon"></span>
                             <span class="glyphicon glyphicon-comment menu-icon"
-                                  th:data-id="${comment.getId()}" onclick="collapseComment(this)" th:text="${comment.getCommentCount()}"></span>
-                            <span class="pull-right" th:text="${#dates.format(comment.getGmtCreate(),'yyyy-MM-dd')}"></span>
+                                  th:data-id="${comment.getId()}" onclick="collapseComment(this)"
+                                  th:text="${comment.getCommentCount()}"></span>
+                            <span class="pull-right"
+                                  th:text="${#dates.format(comment.getGmtCreate(),'yyyy-MM-dd')}"></span>
                         </div>
                         <div class="collapse sub-comments" th:id="${'comment-'+comment.getId()}">
                             <div>
-                                <input type="text" class="form-control" placeholder="评论" th:id="${'reply-'+comment.getId()}">
-                                <button type="button" class="btn btn-success sub-comments-btn pull-right" onclick="comment(this)" th:data-id="${comment.getId()}">评论</button>
+                                <input type="text" class="form-control" placeholder="评论"
+                                       th:id="${'reply-'+comment.getId()}">
+                                <button type="button" class="btn btn-success sub-comments-btn pull-right"
+                                        onclick="comment(this)" th:data-id="${comment.getId()}">评论
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -73,11 +90,11 @@
                     <div class="media-left">
                         <a href="#">
                             <img class="media-object img-rounded"
-                                 th:src="${question.user.avatarUrl}">
+                                 th:src="${session.user!=null ? session.user.avatarUrl : '/images/unknown.png'}">
                         </a>
                     </div>
                     <div class="media-body">
-                    <span th:text="${question.user.getName()}">
+                    <span th:text="${session.user!=null ? session.user.getName() : '匿名用户'}">
                         <a href="#"></a>
                     </span>
                     </div>
@@ -105,7 +122,7 @@
             <hr>
             <div>
                 <h4>假装拥有广告</h4>
-                <img src="/img/makeup.jpg" class="img-thumbnail" style="width:100%">
+                <img src="/images/makeup.jpg" class="img-thumbnail" style="width:100%">
             </div>
             <hr>
             <h4>相关问题</h4>
@@ -117,5 +134,6 @@
         </div>
     </div>
 </div>
+<div th:insert="~{footer :: foot}"></div>
 </body>
 </html>

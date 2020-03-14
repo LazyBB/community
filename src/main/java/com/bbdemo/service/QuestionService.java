@@ -1,6 +1,7 @@
 package com.bbdemo.service;
 
 import com.bbdemo.dto.PaginationDTO;
+import com.bbdemo.dto.QuestionQueryDTO;
 import com.bbdemo.dto.QuestionDTO;
 import com.bbdemo.exception.CustomizeErrorCode;
 import com.bbdemo.exception.CustomizeException;
@@ -30,8 +31,14 @@ public class QuestionService {
     private QuestionExtMapper questionExtMapper;
 
 
-    public PaginationDTO List(Integer page, Integer size) {
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+    public PaginationDTO List(String search, Integer page, Integer size) {
+        String regexp = null;
+        if (StringUtils.isNotBlank(search)) {
+            regexp = StringUtils.replace(search, " ", "|");
+        }
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(regexp);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         int totalpage;
         if (totalCount % size == 0) {
             totalpage = totalCount / size;
@@ -45,9 +52,9 @@ public class QuestionService {
             page = totalpage;
         }
         Integer offset = size * (page - 1);
-        QuestionExample example = new QuestionExample();
-        example.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
+        questionQueryDTO.setPage(offset);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new LinkedList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question : questions) {
