@@ -17,7 +17,27 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
-
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <db.url>jdbc:h2:~/H2database</db.url>
+                <db.user>sa</db.user>
+                <db.password>123</db.password>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <db.url>jdbc:mysql://rm-2zeiz3r5jd37h62av125010.mysql.rds.aliyuncs.com:3306/community_db</db.url>
+                <db.user>community</db.user>
+                <db.password>Ba!2424329</db.password>
+            </properties>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,7 +72,11 @@
             <artifactId>okhttp</artifactId>
             <version>4.2.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.19</version>
+        </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -99,15 +123,20 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.2.0</version>
                 <configuration>
-                    <url>jdbc:h2:~/H2database</url>
-                    <user>sa</user>
-                    <password>123</password>
+                    <url>${db.url}</url>
+                    <user>${db.user}</user>
+                    <password>${db.password}</password>
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>
                         <version>1.4.200</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>8.0.19</version>
                     </dependency>
                 </dependencies>
             </plugin>
